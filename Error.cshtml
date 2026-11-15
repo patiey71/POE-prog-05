@@ -1,0 +1,10 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+<div class="container py-5 text-center">
+    <div class="stat-number" style="font-size:6rem;color:var(--rd-orange)">@Model.Code</div>
+    <h1>@Model.Title</h1>
+    <p class="lead text-muted">@Model.Message</p>
+    <a class="btn btn-primary mt-2" asp-controller="Home" asp-action="Index">Back to RaceDay</a>
+</div>

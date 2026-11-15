@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" role="img" aria-label="RaceDay default event banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1b34"/>
+      <stop offset="1" stop-color="#14294d"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="350" fill="url(#bg)"/>
+  <g fill="#ffffff" opacity="0.06">
+    <polygon points="0,350 120,0 190,0 70,350"/>
+    <polygon points="170,350 290,0 360,0 240,350"/>
+    <polygon points="340,350 460,0 530,0 410,350"/>
+    <polygon points="510,350 630,0 700,0 580,350"/>
+    <polygon points="680,350 800,0 870,0 750,350"/>
+  </g>
+  <polygon points="0,290 800,230 800,350 0,350" fill="#ff5b1f"/>
+  <polygon points="0,320 800,268 800,350 0,350" fill="#d7ff3d"/>
+  <text x="400" y="170" text-anchor="middle" font-family="Arial Narrow, Arial, sans-serif" font-size="84" font-weight="900" font-style="italic" fill="#ffffff">RACE<tspan fill="#d7ff3d">DAY</tspan></text>
+</svg>

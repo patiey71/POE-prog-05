@@ -1,0 +1,18 @@
+@{
+    var items = new[]
+    {
+        (Key: "Success", Css: "alert-success"),
+        (Key: "Warning", Css: "alert-warning"),
+        (Key: "Error", Css: "alert-danger")
+    };
+}
+@foreach (var item in items)
+{
+    if (TempData[item.Key] is string message && !string.IsNullOrWhiteSpace(message))
+    {
+        <div class="alert @item.Css alert-dismissible fade show mt-3" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}

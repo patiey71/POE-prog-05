@@ -1,0 +1,13 @@
+@model EventDto
+<article class="card-rd event-card">
+    <img class="banner" src="@Url.Banner(Model.BannerImage)" alt="Banner for @Model.Name" loading="lazy" />
+    <div class="card-body">
+        <div><span class="chip @ViewHelpers.ChipClass(Model.EventType)">@Model.EventType</span></div>
+        <h3>@Model.Name</h3>
+        <div class="event-meta">@ViewHelpers.LongDate(Model.Date)</div>
+        <div class="event-meta">@Model.Location &middot; @Model.DistanceKm.ToString("0.##") km</div>
+        <div class="mt-auto">
+            <a class="btn btn-primary btn-sm" asp-controller="Events" asp-action="Details" asp-route-id="@Model.Id">View event</a>
+        </div>
+    </div>
+</article>

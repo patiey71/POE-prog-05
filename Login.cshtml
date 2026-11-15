@@ -1,0 +1,25 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Log in";
+}
+<div class="container">
+    <div class="page-head"><h1>Log in</h1><p>Welcome back. Pick up where you left off.</p></div>
+    <div class="card-rd form-card">
+        <form asp-action="Login" method="post" novalidate>
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="email" autofocus />
+                <span asp-validation-for="Email"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Log in</button>
+            <a class="ms-2" asp-action="Register">Need an account? Join RaceDay</a>
+        </form>
+    </div>
+</div>

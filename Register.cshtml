@@ -1,0 +1,68 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Join RaceDay";
+}
+<div class="container">
+    <div class="page-head"><h1>Join RaceDay</h1><p>Create your account in under a minute.</p></div>
+    <div class="card-rd form-card">
+        <form asp-action="Register" method="post" novalidate>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" autocomplete="given-name" />
+                    <span asp-validation-for="FirstName"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" autocomplete="family-name" />
+                    <span asp-validation-for="LastName"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" autocomplete="email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" autocomplete="new-password" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" class="form-control" />
+                    <span asp-validation-for="DateOfBirth"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" autocomplete="tel" />
+                    <span asp-validation-for="PhoneNumber"></span>
+                </div>
+                <div class="col-12">
+                    <span class="form-label d-block">I am joining as</span>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Role" id="role-participant" value="Participant" checked="@(Model.Role == "Participant")" />
+                        <label class="form-check-label" for="role-participant">Participant (I want to enter events)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Role" id="role-organiser" value="Organiser" checked="@(Model.Role == "Organiser")" />
+                        <label class="form-check-label" for="role-organiser">Organiser (I run events)</label>
+                    </div>
+                    <span asp-validation-for="Role"></span>
+                </div>
+                <div class="col-12" id="organiser-code-box" hidden>
+                    <label asp-for="OrganiserCode" class="form-label"></label>
+                    <input asp-for="OrganiserCode" class="form-control" autocomplete="off" />
+                    <div class="form-text">Only needed if your RaceDay administrator gave you a code.</div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Create account</button>
+            <a class="ms-2" asp-action="Login">Already have an account? Log in</a>
+        </form>
+    </div>
+</div>

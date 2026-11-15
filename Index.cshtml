@@ -1,0 +1,47 @@
+@model ResultsEntryViewModel
+@{
+    ViewData["Title"] = "Capture results";
+}
+<div class="container">
+    <div class="page-head"><h1>Capture results</h1><p>@Model.Event.Name &middot; enter each finisher's time (hh:mm:ss) and position.</p></div>
+
+    @if (!Model.Rows.Any())
+    {
+        <div class="card-rd p-5 text-center text-muted">There are no enrolled participants to capture results for.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-rd align-middle">
+                <thead><tr><th>Participant</th><th>Category</th><th>Status</th><th>Finish time</th><th>Position</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var row in Model.Rows)
+                {
+                    var formId = "result-" + row.Enrolment.Id;
+                    <tr>
+                        <td>@row.Enrolment.ParticipantName</td>
+                        <td>@row.Enrolment.CategoryName</td>
+                        <td><partial name="_StatusBadge" model="row.Enrolment.Status" /></td>
+                        <td style="width:150px">
+                            <input form="@formId" class="form-control form-control-sm" name="FinishTime" placeholder="00:45:30"
+                                   value="@(row.Result is null ? "" : ViewHelpers.FinishTime(row.Result.FinishTime))"
+                                   pattern="\d{1,2}:[0-5]\d:[0-5]\d" title="Use hh:mm:ss, for example 00:45:30" required />
+                        </td>
+                        <td style="width:110px">
+                            <input form="@formId" class="form-control form-control-sm" type="number" min="1" name="Position"
+                                   value="@(row.Result?.Position.ToString() ?? "")" required />
+                        </td>
+                        <td class="text-end">
+                            <form id="@formId" asp-action="Save" asp-route-eventId="@Model.Event.Id" method="post">
+                                <input type="hidden" name="EnrolmentId" value="@row.Enrolment.Id" />
+                                <button class="btn btn-sm btn-primary" type="submit">@(row.Result is null ? "Save" : "Update")</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    <a asp-controller="OrganiserEvents" asp-action="Index">&larr; Back to my events</a>
+</div>
