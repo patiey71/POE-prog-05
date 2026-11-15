@@ -1,0 +1,51 @@
+# One command runs the whole system:   docker compose up --build
+#   Web app (MVC):  http://localhost:8081
+#   API (Swagger):  http://localhost:5080/swagger
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "RaceDay_Passw0rd!"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'RaceDay_Passw0rd!' -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  # Local stand-in for Azure Blob Storage. To use a real Azure storage account instead, set
+  # AZURE_STORAGE_CONNECTION_STRING before running (see README).
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    command: azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck
+    ports:
+      - "10000:10000"
+
+  api:
+    build:
+      context: .
+      dockerfile: RaceDay.Api/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      azurite:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=RaceDayDb;User Id=sa;Password=RaceDay_Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true"
+      AzureBlob__ConnectionString: "${AZURE_STORAGE_CONNECTION_STRING:-DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;}"
+      AzureBlob__ContainerName: raceday-images
+    ports:
+      - "5080:8080"
+
+  web:
+    build:
+      context: ./RaceDay.Web
+    depends_on:
+      - api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Api__BaseUrl: http://api:8080
+    ports:
+      - "8081:8080"
