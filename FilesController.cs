@@ -1,32 +1,27 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RaceDay.Web.Services;
+using RaceDay.Api.Services;
 
-namespace RaceDay.Web.Controllers;
+namespace RaceDay.Api.Controllers;
 
-/// <summary>
-/// Serves event banners and profile pictures. The bytes come from the API (which reads them from Azure
-/// Blob Storage), so the browser never needs credentials for - or a direct connection to - Azure.
-/// </summary>
-[SessionAuthorize]
-public class FilesController : Controller
+[ApiController]
+[Route("api/files")]
+[Authorize]
+public class FilesController : ControllerBase
 {
-    private readonly ApiClient _api;
-    public FilesController(ApiClient api) => _api = api;
+    private readonly IFileStorage _files;
+    public FilesController(IFileStorage files) => _files = files;
 
-    [HttpGet("files/{**name}")]
+    /// <summary>Download an event banner or profile picture by its stored name (logged-in users only).</summary>
+    /// <response code="200">The image.</response>
+    /// <response code="404">No such image.</response>
+    [HttpGet("{**name}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(string name)
     {
-        try
-        {
-            var (bytes, contentType) = await _api.GetFileAsync(name);
-            Response.Headers["Cache-Control"] = "private, max-age=3600";
-            return File(bytes, contentType);
-        }
-        catch (ApiException ex) when (ex is not ApiUnauthorizedException)
-        {
-            // Missing or unreadable image: show a default picture rather than a broken icon.
-            var fallback = name.StartsWith("profiles/") ? "~/img/avatar-default.svg" : "~/img/banner-default.svg";
-            return LocalRedirect(fallback);
-        }
+        if (!(name.StartsWith("banners/") || name.StartsWith("profiles/")) || name.Contains("..")) return NotFound();
+        var file = await _files.OpenAsync(name);
+        return file is null ? NotFound() : File(file.Content, file.ContentType);
     }
 }

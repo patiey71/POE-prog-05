@@ -1,10 +1,13 @@
 {
   "profiles": {
-    "RaceDay.Web": {
+    "RaceDay.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5090",
-      "environmentVariables": { "ASPNETCORE_ENVIRONMENT": "Development" }
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }
